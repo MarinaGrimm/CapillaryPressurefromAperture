@@ -41,6 +41,7 @@ PorousFlowCapillaryPressureConstFromApert::PorousFlowCapillaryPressureConstFromA
  // FunctionInterface(this),
   _func(getFunction("function")), //aperture values associated with _func
   _int_tension(getParam<Real>("int_tension"))
+  Real _cap_press;
 
 {
   // Set _log_ext to false as the logarithmic extension is not necessary in this object
@@ -53,11 +54,11 @@ Real PorousFlowCapillaryPressureConstFromApert::dEffectiveSaturation(Real /*pc*/
 
 Real PorousFlowCapillaryPressureConstFromApert::d2EffectiveSaturation(Real /*pc*/) const { return 0.0; }
 
-//Real PorousFlowCapillaryPressureConstFromApert::computeQpProperties()
+//Real PorousFlowCapillaryPressureConstFromApert::value(Real, const Point &)
 
 //{
- //   Real cap_press;
-//    cap_press = _int_tension/_func.value(_t, _q_point);
+ //  Real cap_press;
+ //   _cap_press = _int_tension/_func.value(_t, _q_point);
     
 //}
 
@@ -65,7 +66,7 @@ Real PorousFlowCapillaryPressureConstFromApert::d2EffectiveSaturation(Real /*pc*
 Real PorousFlowCapillaryPressureConstFromApert::capillaryPressureCurve(Real /*saturation*/) const
 
 {
- //   return cap_press;
+ //   return _cap_press;
     return _int_tension/_func.value(_t, _q_point);
 
 
