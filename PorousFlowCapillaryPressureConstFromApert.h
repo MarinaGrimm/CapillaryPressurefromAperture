@@ -4,10 +4,6 @@
 //*
 
 
-
-
-
-
 #ifndef POROUSFLOWCAPILLARYPRESSURECONSTFROMAPERT_H
 #define POROUSFLOWCAPILLARYPRESSURECONSTFROMAPERT_H
 
@@ -45,8 +41,8 @@ InputParameters validParams<PorousFlowCapillaryPressureConstFromApert>();
  * as infinite (high spatial correlation length, or R2 infinite).
  */
  
-class PorousFlowCapillaryPressureConstFromApert : public PorousFlowCapillaryPressure,
-                                                  public Function//,
+class PorousFlowCapillaryPressureConstFromApert : public PorousFlowCapillaryPressure//,
+        // Not necessary to derive from Function   public Function//,
                                                //   protected FunctionInterface
 
 {
@@ -62,7 +58,7 @@ public:
   virtual Real dEffectiveSaturation(Real pc) const override;
   virtual Real d2EffectiveSaturation(Real pc) const override;
     
-  virtual Real value(Real t, const Point & p) override;
+//  virtual Real value(Real t, const Point & p) override;
     
     
 protected:
@@ -84,14 +80,14 @@ protected:
     
     
     /// quadrature point index
- //   unsigned int _qp;
+    unsigned int _qp;
     /// active quadrature points
-    const MooseArray<Point> & _q_point;
+    
     Function & _func;
-    Real _int_tension;
-    Real & _t;
+//  const MooseArray<Point> & _q_point;
 
-
+ //   Real & _t;
+    //TEMP PHASE BETHA   Real _int_tension;
 
 /// Capillary pressure as a function of aperture (Pa)
 /**

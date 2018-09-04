@@ -4,6 +4,9 @@
 
 
 #include "PorousFlowCapillaryPressureConstFromApert.h"
+
+#include "libmesh/quadrature.h"
+
 //#include "MooseMesh.h"
 
 //#include "libmesh/mesh_tools.h"
@@ -20,11 +23,10 @@ InputParameters
 validParams<PorousFlowCapillaryPressureConstFromApert>()
 {
   InputParameters params = validParams<PorousFlowCapillaryPressure>();
-    params += validParams<Function>();
-    params.addRequiredParam<FunctionName>(
-            "function", "This is the ImageMinMax function, that gives the aperture value");
-   params.addRequiredParam<Real>(
-            "int_tension", "Representative value of the interfacial tension of the two fluids (N/m)");
+  //  params += validParams<Function>();
+    params.addParam<FunctionName>(
+            "function", 1.0, "This is the ImageMinMax function, that gives the aperture value");
+ //TEMP PHASE BETHA  params.addRequiredParam<unsigned int>( "int_tension", "Representative value of the interfacial tension of the two fluids (N/m)");
 //   params.addRequiredCoupledVar("aperture", "Aperture of the fracture");
     
   params.addClassDescription("Capillary pressure calculate with Young-Laplace formula");
@@ -37,11 +39,11 @@ validParams<PorousFlowCapillaryPressureConstFromApert>()
 PorousFlowCapillaryPressureConstFromApert::PorousFlowCapillaryPressureConstFromApert(const InputParameters & parameters) :
 
   PorousFlowCapillaryPressure(parameters),
-  Function(parameters),
+//  Function(parameters),
  // FunctionInterface(this),
-  _func(getFunction("function")), //aperture values associated with _func
-  _int_tension(getParam<Real>("int_tension"))
-  Real _cap_press;
+  _func(getFunction("function"))//, //aperture values associated with _func
+//TEMP PHASE BETHA  _int_tension(getParam<unsigned int>("int_tension") : 0)
+ // Real _cap_press;
 
 {
   // Set _log_ext to false as the logarithmic extension is not necessary in this object
@@ -67,7 +69,11 @@ Real PorousFlowCapillaryPressureConstFromApert::capillaryPressureCurve(Real /*sa
 
 {
  //   return _cap_press;
-    return _int_tension/_func.value(_t, _q_point);
+ //TEMP PHASE BETHA   return _int_tension/_func.value(_t, _q_point);
+//    return 0.72/_func.value(_t, _q_point);
+    return 0.72/_func.value(_t, _q_point[_qp]);
+    
+
 
 
 }
