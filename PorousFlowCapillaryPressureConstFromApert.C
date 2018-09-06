@@ -16,7 +16,7 @@
  * this Kernel and their default values
  */
 
-registerMooseObject("SaintBernardApp", PorousFlowCapillaryPressureConstFromApert);
+registerMooseObject("MooseApp", PorousFlowCapillaryPressureConstFromApert);
 
 template <>
 InputParameters
