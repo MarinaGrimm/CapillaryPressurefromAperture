@@ -4,17 +4,10 @@
 
 
 #include "PorousFlowCapillaryPressureConstFromApert.h"
-
 #include "libmesh/quadrature.h"
 
 //#include "MooseMesh.h"
-
 //#include "libmesh/mesh_tools.h"
-
-/**
- * This function defines the valid parameters for
- * this Kernel and their default values
- */
 
 registerMooseObject("MooseApp", PorousFlowCapillaryPressureConstFromApert);
 
@@ -23,12 +16,9 @@ InputParameters
 validParams<PorousFlowCapillaryPressureConstFromApert>()
 {
   InputParameters params = validParams<PorousFlowCapillaryPressure>();
-  //  params += validParams<Function>();
-    params.addParam<FunctionName>(
+     params.addParam<FunctionName>(
             "function", 1.0, "This is the ImageMinMax function, that gives the aperture value");
- //TEMP PHASE BETHA  params.addRequiredParam<unsigned int>( "int_tension", "Representative value of the interfacial tension of the two fluids (N/m)");
-//   params.addRequiredCoupledVar("aperture", "Aperture of the fracture");
-    
+  params.addParam<Real>( "int_tension", "Representative value of the interfacial tension of the two fluids (N/m)");
   params.addClassDescription("Capillary pressure calculate with Young-Laplace formula");
     
   return params;
@@ -36,13 +26,11 @@ validParams<PorousFlowCapillaryPressureConstFromApert>()
 
 // You must call the constructor of the base class first
 
-PorousFlowCapillaryPressureConstFromApert::PorousFlowCapillaryPressureConstFromApert(const InputParameters & parameters) :
-
-  PorousFlowCapillaryPressure(parameters),
-//  Function(parameters),
- // FunctionInterface(this),
-  _func(getFunction("function"))//, //aperture values associated with _func
-//TEMP PHASE BETHA  _int_tension(getParam<unsigned int>("int_tension") : 0)
+PorousFlowCapillaryPressureConstFromApert::PorousFlowCapillaryPressureConstFromApert(
+    const InputParameters & parameters)
+:   PorousFlowCapillaryPressure(parameters),
+  _func(getFunction("function")), //aperture values associated with _func
+  _int_tension(getParam<Real>("int_tension"))
  // Real _cap_press;
 
 {
@@ -50,40 +38,43 @@ PorousFlowCapillaryPressureConstFromApert::PorousFlowCapillaryPressureConstFromA
   _log_ext = false;
 }
 
-Real PorousFlowCapillaryPressureConstFromApert::effectiveSaturation(Real /*pc*/) const { return 1.0; }
-
-Real PorousFlowCapillaryPressureConstFromApert::dEffectiveSaturation(Real /*pc*/) const { return 0.0; }
-
-Real PorousFlowCapillaryPressureConstFromApert::d2EffectiveSaturation(Real /*pc*/) const { return 0.0; }
-
-//Real PorousFlowCapillaryPressureConstFromApert::value(Real, const Point &)
-
-//{
- //  Real cap_press;
- //   _cap_press = _int_tension/_func.value(_t, _q_point);
-    
-//}
-
-//Real PorousFlowCapillaryPressureConstFromApert::capillaryPressureCurve(Real /*saturation*/, Real t, const Point & p) const
-Real PorousFlowCapillaryPressureConstFromApert::capillaryPressureCurve(Real /*saturation*/) const
-
+Real
+PorousFlowCapillaryPressureConstFromApert::effectiveSaturation(Real /*pc*/, unsigned /*qp*/) const
 {
- //   return _cap_press;
- //TEMP PHASE BETHA   return _int_tension/_func.value(_t, _q_point);
-//    return 0.72/_func.value(_t, _q_point);
-    return 0.72/_func.value(_t, _q_point[_qp]);
-    
-
-
-
+    return 1.0;
 }
 
-Real PorousFlowCapillaryPressureConstFromApert::dCapillaryPressureCurve(Real /*saturation*/) const
+
+Real
+PorousFlowCapillaryPressureConstFromApert::dEffectiveSaturation(Real /*pc*/, unsigned /*qp*/) const
 {
-  return 0.0;
+    return 0.0;
 }
 
-Real PorousFlowCapillaryPressureConstFromApert::d2CapillaryPressureCurve(Real /*saturation*/) const
+Real
+PorousFlowCapillaryPressureConstFromApert::d2EffectiveSaturation(Real /*pc*/, unsigned /*qp*/) const
 {
-  return 0.0;
+    return 0.0;
+}
+
+
+Real
+PorousFlowCapillaryPressureConstFromApert::capillaryPressureCurve(Real /*saturation*/, unsigned /*qp*/) const
+{
+  return _int_tension/_func.value(_t, _q_point[_qp]);
+  //  return 0.72/_func.value(_t, _q_point[_qp]);
+}
+
+Real
+PorousFlowCapillaryPressureConstFromApert::dCapillaryPressureCurve(Real /*saturation*/,
+                                                          unsigned /*qp*/) const
+{
+    return 0.0;
+}
+
+Real
+PorousFlowCapillaryPressureConstFromApert::d2CapillaryPressureCurve(Real /*saturation*/,
+                                                           unsigned /*qp*/) const
+{
+    return 0.0;
 }

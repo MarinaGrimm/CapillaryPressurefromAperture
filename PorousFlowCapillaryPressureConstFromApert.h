@@ -9,9 +9,6 @@
 
 #include "PorousFlowCapillaryPressure.h"
 #include "Function.h"
-//#include "FunctionInterface.h"
-
-//#include "libmesh/mesh_tools.h"
 
 /**
  * The forward declaration is so that we can declare the validParams() function
@@ -41,62 +38,45 @@ InputParameters validParams<PorousFlowCapillaryPressureConstFromApert>();
  * as infinite (high spatial correlation length, or R2 infinite).
  */
  
-class PorousFlowCapillaryPressureConstFromApert : public PorousFlowCapillaryPressure//,
-        // Not necessary to derive from Function   public Function//,
-                                               //   protected FunctionInterface
+class PorousFlowCapillaryPressureConstFromApert : public PorousFlowCapillaryPressure
 
 {
 public:
     
   PorousFlowCapillaryPressureConstFromApert(const InputParameters & parameters);
 
-  virtual Real capillaryPressureCurve(Real saturation) const override;
-  virtual Real dCapillaryPressureCurve(Real saturation) const override;
-  virtual Real d2CapillaryPressureCurve(Real saturation) const override;
+    virtual Real capillaryPressureCurve(Real saturation, unsigned qp = 0) const override;
+    virtual Real dCapillaryPressureCurve(Real saturation, unsigned qp = 0) const override;
+    virtual Real d2CapillaryPressureCurve(Real saturation, unsigned qp = 0) const override;
 
-  virtual Real effectiveSaturation(Real pc) const override;
-  virtual Real dEffectiveSaturation(Real pc) const override;
-  virtual Real d2EffectiveSaturation(Real pc) const override;
+    virtual Real effectiveSaturation(Real pc, unsigned qp = 0) const override;
+    virtual Real dEffectiveSaturation(Real pc, unsigned qp = 0) const override;
+    virtual Real d2EffectiveSaturation(Real pc, unsigned qp = 0) const override;
     
 //  virtual Real value(Real t, const Point & p) override;
     
     
 protected:
     
- //   MooseMesh & _mesh;
-    
-    /// The current element pointer (available during execute())
- //   const Elem *& _current_elem;
-    
-    /// The current element volume (available during execute())
- //   const Real & _current_elem_volume;
-    
-   
-  //  QBase *& _qrule;
- //   const MooseArray<Real> & _JxW;
- //   const MooseArray<Real> & _coord;
-    
- //   void computeQpProperties() override;
-    
-    
     /// quadrature point index
     unsigned int _qp;
-    /// active quadrature points
-    
+
+    /// Capillary pressure as a function of aperture (Pa)
     Function & _func;
-//  const MooseArray<Point> & _q_point;
-
- //   Real & _t;
-    //TEMP PHASE BETHA   Real _int_tension;
-
-/// Capillary pressure as a function of aperture (Pa)
-/**
-* This function computeValue() should always be defined in the .C file.
-*/
+    Real _int_tension;
     
-// OLD   virtual Real computeValue() override;
-//  OLD void computeQpProperties() override;
-
+ //  MooseMesh & _mesh;
+ //  The current element pointer (available during execute())
+ //  const Elem *& _current_elem;
+ //  The current element volume (available during execute())
+ //  const Real & _current_elem_volume;
+ //  QBase *& _qrule;
+ //  const MooseArray<Real> & _JxW;
+ //  const MooseArray<Real> & _coord;
+ //  void computeQpProperties() override;
+ //  active quadrature points
+ //  const MooseArray<Point> & _q_point;
+ //  Real & _t;
 
 };
 
