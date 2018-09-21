@@ -5,6 +5,7 @@
 /*             See LICENSE for full restrictions                */
 /****************************************************************/
 
+
 #include "PorousFlowCapillaryPressureMaterial.h"
 
 registerMooseObject("MooseApp", PorousFlowCapillaryPressureMaterial);
@@ -13,9 +14,12 @@ template <>
 InputParameters
 validParams<PorousFlowCapillaryPressureMaterial>()
 {
-  InputParameters params = validParams<PorousFlowMaterialBase>();
-  params.addRequiredCoupledVar("capillarypressure", "The capillary pressure calculated from aperture of the fracture");
+  InputParameters params = validParams<Material>();
+//The one that compiled before:
+    // params.addRequiredCoupledVar("capillarypressure", "The capillary pressure calculated from aperture of the fracture");
     // params.addRequiredParam<Real>("capillarypressure", "The capillary pressure calculated from aperture of the fracture");
+    params.addRequiredParam<UserObjectName>("capillarypressure",
+                                            "Name of the UserObject defining the capillary pressure");
   params.addClassDescription(
       "This Material captures the calculated value of capillary pressure per element, given a fracture aperture field.");
   return params;
@@ -23,11 +27,12 @@ validParams<PorousFlowCapillaryPressureMaterial>()
 
 PorousFlowCapillaryPressureMaterial::PorousFlowCapillaryPressureMaterial(
     const InputParameters & parameters)
-  : PorousFlowMaterialBase(parameters),
+  : Material(parameters),
    // _capillarypressure(coupledValue("capillarypressure"))
-    _capillarypressure_qp(declareProperty<Real>("capillarypressure")),
+    _capillarypressure_mat(declareProperty<Real>("capillarypressure")),
  //   _capillarypressure(coupledValue("capillarypressure"))
-   _capillarypressure(getParam<Real>("capillarypressure"))
+//The one that compiled ok:   _capillarypressure(getParam<Real>("capillarypressure"))
+    _pc_value(getUserObject<PorousFlowCapillaryPressureConstFromApert>("capillarypressure"))
 
 {
      //   if (1 < _capillarypressure)
@@ -38,7 +43,13 @@ void
 PorousFlowCapillaryPressureMaterial::computeQpProperties()
 {
 
-  _capillarypressure_qp[_qp] = _capillarypressure;
+ //   _capillarypressure_mat[_qp] = _pc_value.averageValue[_qp];
+  //  _capillarypressure_mat[_qp] = _pc_value.value(_t, _q_point[_qp]);
+    
+   _capillarypressure_mat[_qp] = _pc_value.value(_t, _q_point[_qp]);
+ //   _capillarypressure_mat[_qp] = _pc_value.value(_current_elem->subdomain_id());
+    
+  //    return _int_tension/_func.value(_t, _q_point[_qp]);
 
 
 }

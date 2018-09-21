@@ -78,3 +78,9 @@ PorousFlowCapillaryPressureConstFromApert::d2CapillaryPressureCurve(Real /*satur
 {
     return 0.0;
 }
+
+Real
+PorousFlowCapillaryPressureConstFromApert::value(Real /*t*/, const Point & /*p*/) const
+{
+    return 0.0;
+}

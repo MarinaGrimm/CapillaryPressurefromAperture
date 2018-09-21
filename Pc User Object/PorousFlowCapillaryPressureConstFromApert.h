@@ -53,7 +53,7 @@ public:
     virtual Real dEffectiveSaturation(Real pc, unsigned qp = 0) const override;
     virtual Real d2EffectiveSaturation(Real pc, unsigned qp = 0) const override;
     
-//  virtual Real value(Real t, const Point & p) override;
+    virtual Real value(Real t, const Point & p) const;
     
     
 protected:
