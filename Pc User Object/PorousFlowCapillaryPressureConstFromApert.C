@@ -82,5 +82,5 @@ PorousFlowCapillaryPressureConstFromApert::d2CapillaryPressureCurve(Real /*satur
 Real
 PorousFlowCapillaryPressureConstFromApert::value(Real /*t*/, const Point & /*p*/) const
 {
-    return 0.0;
+    return _int_tension/_func.value(_t, _q_point[_qp]);
 }
